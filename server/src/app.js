@@ -20,4 +20,7 @@ import userRouter from './route/user.route.js'
 app.use("/api/users", userRouter)
 import postRouter from './route/post.route.js'
 app.use("/api/posts", postRouter)
+import followRouter from './route/followers.route.js'
+app.use("/api/follow", followRouter)
+
 export {app}

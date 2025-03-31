@@ -1,16 +1,28 @@
 import { isValidObjectId } from "mongoose";
 import {Post} from "../model/post.model.js";
-import {User} from "../model/user.model.js";
 import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import {asyncHandler} from "../utils/asyncHandler.js"
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const createPost=asyncHandler(async(req,res)=>{
-    const {title,content,image}=req.body;
+    const {title,content}=req.body;
+    console.log("hello");
+  
+     const mediaLocalPath = req.file?.MediaFile?.[0]?.path || "";
+     console.log("22");
+     if (!mediaLocalPath || !content || !title) {
+        throw new ApiError(400, "Atleast One feild is required ! ");
+    }
+    const media = mediaLocalPath ? await uploadOnCloudinary(mediaLocalPath) : "";
+    if (mediaLocalPath && !media) {
+        throw new ApiError(400, "Error while uploading  Media  ");
+      }
+      console.log(media);
     const post=new Post({
         title,
         content,
-        image,
+        image: media?.url || "",
         owner:req.user._id
     })
     await post.save();

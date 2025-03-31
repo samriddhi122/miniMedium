@@ -12,15 +12,16 @@ const router = Router();
 router.use(verifyJWT);
 
 router
-    .route("/followers/:userId")
+    .route("/followers/:ownerId")
     .get(getFollowers);
 
 router
-    .route("/following/:userId")
+    .route("/following/:ownerId")
     .get(getFollowing);
 
-router
-    .route("/toggle-follow")
+    router
+    .route("/toggle-follow/:userId") // ✅ Add `:userId` as a parameter
     .post(toggleFollowing);
+
 
 export default router;
